@@ -1,0 +1,3 @@
+[submodule "high_impact"]
+	path = high_impact
+	url = https://github.com/Okabintaro/high_impact.git
