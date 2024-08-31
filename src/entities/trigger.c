@@ -5,6 +5,7 @@ EDITOR_RESIZE(true);
 EDITOR_COLOR(255, 229, 14);
 
 static void settings(entity_t *self, json_t *settings) {
+	printf("settings trigger\n");
 	self->trigger.targets = entities_from_json_names(json_value_for_key(settings, "target"));
 	self->size.x = json_number(json_value_for_key(json_value_for_key(settings, "size"), "x"));
 	self->size.y = json_number(json_value_for_key(json_value_for_key(settings, "size"), "y"));
@@ -35,6 +36,7 @@ static void update(entity_t *self) {
 }
 
 static void touch(entity_t *self, entity_t *other) {
+	printf("trigger touched\n");
 	if (!self->trigger.can_fire || self->trigger.delay_time > 0) {
 		return;
 	}

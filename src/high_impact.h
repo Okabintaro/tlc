@@ -81,10 +81,11 @@
 
 #define ENTITY_TYPES(TYPE)                       \
 	TYPE(ENTITY_TYPE_PLAYER, player)             \
+	TYPE(ENTITY_TYPE_PROJECTILE, projectile)     \
 	TYPE(ENTITY_TYPE_TRIGGER, trigger)           \
+	TYPE(ENTITY_TYPE_LEVER, lever)               \
 	TYPE(ENTITY_TYPE_PARTICLE, particle)         \
 	TYPE(ENTITY_TYPE_LEVEL_CHANGE, level_change) \
-	TYPE(ENTITY_TYPE_PROJECTILE, projectile)     \
 	TYPE(ENTITY_TYPE_VOID, void)
 
 // All entity types share the same struct. Calling ENTITY_DEFINE() defines that
@@ -103,7 +104,6 @@ ENTITY_DEFINE(
 		    bool has_hit;
 		    bool flip;
 	    } projectile;
-
 
 	    struct {
 		    float high_jump_time;
@@ -124,6 +124,15 @@ ENTITY_DEFINE(
 		    float delay_time;
 		    bool can_fire;
 	    } trigger;
+
+	    struct {
+		    entity_list_t targets;
+		    float delay;
+		    float delay_time;
+		    bool can_fire;
+		    bool is_on;
+		    bool is_touched;
+	    } lever;
     };);
 
 // The entity_message_t is used with the entity_message() function. You can
