@@ -79,13 +79,16 @@
 // Every entity is also expected to have a global entity_vtab_t with the name
 // entity_vtab_SHORT_NAME, e.g. entity_vtab_t entity_vtab_player = {...};
 
-#define ENTITY_TYPES(TYPE)                       \
-	TYPE(ENTITY_TYPE_PLAYER, player)             \
-	TYPE(ENTITY_TYPE_PROJECTILE, projectile)     \
-	TYPE(ENTITY_TYPE_TRIGGER, trigger)           \
-	TYPE(ENTITY_TYPE_LEVER, lever)               \
-	TYPE(ENTITY_TYPE_PARTICLE, particle)         \
-	TYPE(ENTITY_TYPE_LEVEL_CHANGE, level_change) \
+#define ENTITY_TYPES(TYPE)                           \
+	TYPE(ENTITY_TYPE_PLAYER, player)                 \
+	TYPE(ENTITY_TYPE_PROJECTILE, projectile)         \
+	TYPE(ENTITY_TYPE_TRIGGER, trigger)               \
+	TYPE(ENTITY_TYPE_LEVER, lever)                   \
+	TYPE(ENTITY_TYPE_DOOR, door)                     \
+	TYPE(ENTITY_TYPE_GRAVITY_SWITCH, gravity_switch) \
+	TYPE(ENTITY_TYPE_BAD_BOT, bad_bot)               \
+	TYPE(ENTITY_TYPE_PARTICLE, particle)             \
+	TYPE(ENTITY_TYPE_LEVEL_CHANGE, level_change)     \
 	TYPE(ENTITY_TYPE_VOID, void)
 
 // All entity types share the same struct. Calling ENTITY_DEFINE() defines that
@@ -95,6 +98,9 @@
 ENTITY_DEFINE(
     // Entity private data
     union {
+	    struct {
+	    } gravity_switch;
+
 	    struct {
 		    char *path;
 	    } level_change;
@@ -109,6 +115,7 @@ ENTITY_DEFINE(
 		    float high_jump_time;
 		    float idle_time;
 		    bool flip;
+		    bool flip_y;
 		    bool can_jump;
 		    bool is_idle;
 	    } player;
@@ -131,8 +138,18 @@ ENTITY_DEFINE(
 		    float delay_time;
 		    bool can_fire;
 		    bool is_on;
-		    bool is_touched;
+		    bool flip;
 	    } lever;
+
+	    struct {
+		    bool is_open;
+	    } door;
+
+	    struct {
+		    bool in_jump;
+		    bool seen_player;
+		    float jump_timer;
+	    } bad_bot;
     };);
 
 // The entity_message_t is used with the entity_message() function. You can
@@ -141,6 +158,7 @@ ENTITY_DEFINE(
 typedef enum {
 	EM_INVALID,
 	EM_ACTIVATE,
+	EM_DEACTIVATE,
 } entity_message_t;
 
 // Now that we have all the prerequisites, we can include entity.h

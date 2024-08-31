@@ -23,12 +23,15 @@ static void draw(entity_t *self) {
 	} else {
 		self->anim = anim(anim_lever_off);
 	}
+	self->anim.flip_y = self->lever.flip;
 }
 
 
 static void init(entity_t *self) {
 	self->lever.is_on = false;
 	self->check_against = ENTITY_GROUP_PLAYER;
+	self->size = vec2(48, 48);
+	self->offset = vec2(-16, 0);
 	draw(self);
 }
 
@@ -40,6 +43,9 @@ static void settings(entity_t *self, json_t *settings) {
 	json_t *delay = json_value_for_key(settings, "delay");
 	self->lever.delay = delay ? json_number(delay) : -1;
 	self->lever.can_fire = true;
+
+	json_t *flip = json_value_for_key(settings, "flip");
+	self->lever.flip = flip ? json_bool(flip) : false;
 }
 
 
@@ -51,7 +57,6 @@ static void update(entity_t *self) {
 static void touch(entity_t *self, entity_t *other) {
 	if (input_released(A_SHOOT)) {
 		self->lever.is_on = !self->lever.is_on;
-		printf("lever switched to %d\n", self->lever.is_on);
 		draw(self);
 	} else {
 		return;
@@ -61,6 +66,7 @@ static void touch(entity_t *self, entity_t *other) {
 		entity_t *target = entity_by_ref(self->lever.targets.entities[i]);
 		if (target) {
 			entity_trigger(target, other);
+			entity_message(target, self->lever.is_on ? EM_ACTIVATE : EM_DEACTIVATE, NULL);
 		}
 	}
 
@@ -71,10 +77,23 @@ static void touch(entity_t *self, entity_t *other) {
 	}
 }
 
+
+/// React on ACTIVATE and DEACTIVATE messages
+static void message(entity_t *self, entity_message_t message, void *data) {
+	if (message == EM_ACTIVATE) {
+		self->lever.is_on = true;
+	} else if (message == EM_DEACTIVATE) {
+		self->lever.is_on = false;
+	}
+	draw(self);
+}
+
+
 entity_vtab_t entity_vtab_lever = {
     .load = load,
     .init = init,
     .settings = settings,
+    .message = message,
     .update = update,
     .touch = touch,
 };

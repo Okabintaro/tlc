@@ -30,7 +30,8 @@ void main_init(void) {
 	sound_set_global_volume(0.75);
 
 #if DBG_SKIP_TITLE
-	game_set_level_path("assets/levels/01-wasteland2.json");
+	// game_set_level_path("assets/levels/01-wasteland2.json");
+	game_set_level_path("assets/levels/02-entrance.json");
 	engine_set_scene(&scene_game);
 #else
 	engine_set_scene(&scene_title);

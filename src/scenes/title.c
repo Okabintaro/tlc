@@ -12,7 +12,7 @@ static void update(void) {
 		sound_set_volume(g.music, 1.0);
 		sound_unpause(g.music);
 
-		game_set_level_path("assets/levels/01-wasteland.json");
+		game_set_level_path("assets/levels/01-wasteland2.json");
 		engine_set_scene(&scene_game);
 	}
 }

@@ -17,14 +17,12 @@ static void init(void) {
 	last_checkpoint = entity_ref_none();
 
 	entity_list_t players = entities_by_type(ENTITY_TYPE_PLAYER);
-	printf("players.len: %d\n", players.len);
 
 	if (players.len > 0) {
 		g.player = players.entities[0];
 		camera_follow(&camera, g.player, true);
 		entity_t *player_ent = entity_by_ref(g.player);
 		initial_spawn_pos = player_ent->pos;
-		printf("initial_spawn_pos: %f %f\n", initial_spawn_pos.x, initial_spawn_pos.y);
 	}
 }
 
@@ -79,7 +77,6 @@ void game_set_checkpoint(entity_ref_t checkpoint) {
 }
 
 void game_respawn(void) {
-	printf("game_respawn\n");
 	vec2_t pos = initial_spawn_pos;
 
 	// entity_t *respawn_pod = entity_by_ref(last_checkpoint);

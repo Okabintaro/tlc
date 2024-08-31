@@ -35,7 +35,7 @@ static void load(void) {
 	anim_idle    = anim_def(sheet, vec2i(16, 16), 0.2, {0, 1, 2});
 	anim_run     = anim_def(sheet, vec2i(16, 16), 0.07, {11, 12, 13, 14, 15});
 	anim_shoot   = anim_def(sheet, vec2i(16, 16), 1.0, {16, 17, 18, 19});
-	anim_land    = anim_def(sheet, vec2i(16, 16), 0.07, {0, 1, 2, 3, 4, 5, 6, 7});
+	anim_land    = anim_def(sheet, vec2i(16, 16), 0.03, {0, 1, 2, 3, 4, 5, 6, 7});
 	anim_jump    = anim_def(sheet, vec2i(16, 16), 0.15, {9});
 	anim_fall    = anim_def(sheet, vec2i(16, 16), 0.4, {9, 10});
 	anim_die     = anim_def(sheet, vec2i(16, 16), 1.0, {0, 1, 2});
@@ -85,6 +85,8 @@ static void update(entity_t *self) {
 	// 	return;
 	// }
 
+	bool upside_down = engine.gravity < 0;
+
 	self->friction.x = self->on_ground ? FRICTION_GROUND : FRICTION_AIR;
 
 	bool did_move = false;
@@ -102,14 +104,18 @@ static void update(entity_t *self) {
 
 	if (input_state(A_JUMP)) {
 		if (self->on_ground && self->player.can_jump) {
-			self->vel.y = -JUMP_INITIAL_VEL;
+			self->vel.y = upside_down ? JUMP_INITIAL_VEL : -JUMP_INITIAL_VEL;
 			self->player.can_jump = false;
 			self->player.high_jump_time = JUMP_HIGH_TIME;
 		} else if (self->player.high_jump_time > 0) {
 			self->player.high_jump_time -= engine.tick;
 			float d = self->player.high_jump_time;
 			float f = max(0, d < 0 ? engine.tick + d : engine.tick);
-			self->vel.y -= JUMP_HIGH_ACCEL * f;
+			if (upside_down) {
+				self->vel.y += JUMP_HIGH_ACCEL * f;
+			} else {
+				self->vel.y -= JUMP_HIGH_ACCEL * f;
+			}
 		}
 	} else {
 		self->player.high_jump_time = 0;
@@ -128,27 +134,19 @@ static void update(entity_t *self) {
 			plasma->anim.flip_x = self->player.flip;
 			plasma->projectile.anim_hit = anim_plasma_hit;
 		}
+		// Add some recoil
+		self->vel = vec2_add(self->vel, vec2(self->player.flip ? 50 : -50, 0));
+
 		// sound_play(sound_plasma);
 	}
 
 	bool was_on_ground = self->on_ground;
 	entity_base_update(self);
 
-	// if (self->on_ground && !was_on_ground) {
-	// 	printf("on_ground\n");
-	// 	self->offset = vec2(4, 4);
-	// 	self->size = vec2(8, 12);
-	// } else if (!self->on_ground && was_on_ground) {
-	// 	printf("jumping\n");
-	// 	self->offset = vec2(4, 0);
-	// 	self->size = vec2(8, 12);
-	// }
-
-
 	// Just landed ?
 	if (!was_on_ground && self->on_ground) {
 		self->anim = anim(anim_land);
-		self->offset = vec2(4, 4);
+		self->offset = upside_down ? vec2(4, 0) : vec2(4, 4);
 		self->size = vec2(8, 12);
 	}
 
@@ -192,6 +190,7 @@ static void update(entity_t *self) {
 	}
 
 	self->anim.flip_x = self->player.flip;
+	self->anim.flip_y = upside_down;
 	// self->anim.tile_offset = self->player.flip ? 24 : 0;
 }
 
