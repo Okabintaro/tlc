@@ -4,11 +4,11 @@ EDITOR_SIZE(8, 14);
 EDITOR_RESIZE(false);
 EDITOR_COLOR(81, 132, 188);
 
-#define JUMP_INITIAL_VEL 40.0
+#define JUMP_INITIAL_VEL 60.0
 #define JUMP_HIGH_TIME 0.14
 #define JUMP_HIGH_ACCEL 780
-#define ACCEL_GROUND 600
-#define ACCEL_AIR 300
+#define ACCEL_GROUND 800
+#define ACCEL_AIR 500
 #define FRICTION_GROUND 10
 #define FRICTION_AIR 5
 
@@ -68,6 +68,7 @@ static void init(entity_t *self) {
 }
 
 static void shoot(entity_t *self) {
+	return;
 	if (self->player.can_interact_time > 0) {
 		return;
 	}

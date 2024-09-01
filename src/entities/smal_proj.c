@@ -2,11 +2,14 @@
 
 EDITOR_IGNORE(true)
 
+#define DEFAULT_SPEED 200
+
 static void init(entity_t *self) {
 	self->size = vec2(8, 8);
 	self->gravity = 0;
 	self->physics = ENTITY_PHYSICS_WORLD;
 	self->group = ENTITY_GROUP_PROJECTILE;
+	self->smal_proj.speed = DEFAULT_SPEED;
 }
 
 static void set_hit(entity_t *self) {

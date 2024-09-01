@@ -1,8 +1,8 @@
 #include "../main.h"
 
-EDITOR_SIZE(48, 48);
+EDITOR_SIZE(48, 16);
 EDITOR_RESIZE(false);
-EDITOR_COLOR(255, 229, 123);
+EDITOR_COLOR(64, 255, 255);
 
 static anim_def_t *anim_button_off;
 static anim_def_t *anim_button_on;
@@ -17,8 +17,8 @@ static void load(void) {
 
 static void init(entity_t *self) {
 	self->check_against = ENTITY_GROUP_PLAYER;
-	self->size = vec2(48, 48);
-	self->offset = vec2(-16, -16);
+	self->size = vec2(48, 16);
+	self->offset = vec2(-16, 0);
 	self->anim = anim(anim_button_off);
 }
 
@@ -67,7 +67,7 @@ static void draw(entity_t *self, vec2_t viewport) {
 	entity_base_draw(self, viewport);
 	if (g.draw_bb) {
 		render_draw(vec2_sub(self->pos, viewport), self->size, RENDER_NO_TEXTURE, vec2(0, 0), vec2(0, 0),
-		            rgba(255, 255, 255, 10));
+		            rgba(255, 255, 255, 60));
 	}
 }
 

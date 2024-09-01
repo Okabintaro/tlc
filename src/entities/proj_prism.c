@@ -2,9 +2,7 @@
 
 EDITOR_SIZE(16, 16);
 EDITOR_RESIZE(false);
-EDITOR_COLOR(255, 128, 0);
-
-#define PROJ_SPEED 200
+EDITOR_COLOR(255, 255, 0);
 
 static anim_def_t *anim_prism_idle;
 static anim_def_t *anim_prism_active;
@@ -88,48 +86,48 @@ static void redirect_projectile(entity_t *self, entity_t *proj) {
 		from_dir = DIR_UP;
 	}
 
-	vec2_t velocity = vec2(0, 0);
+	float proj_speed = proj->smal_proj.speed;
+	vec2_t velocity = proj->vel;
 	direction_t to_dir;
 	switch (self->proj_prism.direction) {
 	case DIR_UP:
 		if (from_dir == DIR_UP) {
-			velocity = vec2(PROJ_SPEED, 0); // right
+			velocity = vec2(proj_speed, 0); // right
 		} else if (from_dir == DIR_RIGHT) {
-			velocity = vec2(0, -PROJ_SPEED); // up
+			velocity = vec2(0, -proj_speed); // up
 		} else {
-			entity_kill(proj);
-			return;
+			// entity_kill(proj);
+			// return;
 		}
 		break;
 	case DIR_RIGHT:
 		if (from_dir == DIR_DOWN) {
-			velocity = vec2(PROJ_SPEED, 0); // right
+			velocity = vec2(proj_speed, 0); // right
 		} else if (from_dir == DIR_RIGHT) {
-			velocity = vec2(0, PROJ_SPEED); // down
+			velocity = vec2(0, proj_speed); // down
 		} else {
-			entity_kill(proj);
-			return;
-		}
-
-	case DIR_DOWN:
-		if (from_dir == DIR_DOWN) {
-			velocity = vec2(-PROJ_SPEED, 0); // left
-		} else if (from_dir == DIR_LEFT) {
-			velocity = vec2(0, PROJ_SPEED); // down
-		} else {
-			entity_kill(proj);
-			return;
+			// entity_kill(proj);
+			// return;
 		}
 		break;
-
+	case DIR_DOWN:
+		if (from_dir == DIR_DOWN) {
+			velocity = vec2(-proj_speed, 0); // left
+		} else if (from_dir == DIR_LEFT) {
+			velocity = vec2(0, proj_speed); // down
+		} else {
+			// entity_kill(proj);
+			// return;
+		}
+		break;
 	case DIR_LEFT:
 		if (from_dir == DIR_UP) {
-			velocity = vec2(-PROJ_SPEED, 0); // left
+			velocity = vec2(-proj_speed, 0); // left
 		} else if (from_dir == DIR_LEFT) {
-			velocity = vec2(0, -PROJ_SPEED); // up
+			velocity = vec2(0, -proj_speed); // up
 		} else {
-			entity_kill(proj);
-			return;
+			// entity_kill(proj);
+			// return;
 		}
 		break;
 	}
@@ -180,7 +178,7 @@ static void touch(entity_t *self, entity_t *other) {
 		return;
 	}
 	redirect_projectile(self, other);
-	self->proj_prism.cooldown_timer = 0.5;
+	self->proj_prism.cooldown_timer = 0.2;
 }
 
 

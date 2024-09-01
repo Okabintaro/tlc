@@ -2,7 +2,7 @@
 
 EDITOR_SIZE(48, 48);
 EDITOR_RESIZE(false);
-EDITOR_COLOR(255, 229, 123);
+EDITOR_COLOR(255, 64, 64);
 
 static anim_def_t *anim_lever_off;
 static anim_def_t *anim_lever_on;

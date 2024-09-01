@@ -23,10 +23,13 @@ typedef struct {
 	noise_t *noise;
 	sound_t music;
 	entity_ref_t player;
+	camera_t camera;
 
 	float level_time;
 	bool draw_bb;
 	bool paused;
+	bool game_won;
+	float game_won_timer;
 } global_t;
 
 extern global_t g;

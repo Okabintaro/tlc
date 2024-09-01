@@ -2,7 +2,7 @@
 
 EDITOR_SIZE(16, 32);
 EDITOR_RESIZE(false);
-EDITOR_COLOR(255, 229, 123);
+EDITOR_COLOR(128, 128, 128);
 
 static anim_def_t *anim_door_opened;
 static anim_def_t *anim_door_closed;
@@ -15,8 +15,8 @@ static void load(void) {
 	// There are 4 frames in the door sprite sheet, closed, opening, opening, open
 	anim_door_opened = anim_def(door, vec2i(16, 32), 1.0, {3});
 	anim_door_closed = anim_def(door, vec2i(16, 32), 1.0, {0});
-	anim_door_opening = anim_def(door, vec2i(16, 32), 0.1, {1, 2});
-	anim_door_closing = anim_def(door, vec2i(16, 32), 0.1, {2, 1});
+	anim_door_opening = anim_def(door, vec2i(16, 32), 0.07, {1, 2});
+	anim_door_closing = anim_def(door, vec2i(16, 32), 0.07, {2, 1});
 }
 
 
@@ -43,6 +43,11 @@ static void init(entity_t *self) {
 static void settings(entity_t *self, json_t *settings) {
 	json_t *is_open = json_value_for_key(settings, "is_open");
 	self->door.is_open = is_open ? json_bool(is_open) : false;
+	if (self->door.is_open) {
+		self->anim = anim(anim_door_opening);
+	} else {
+		self->anim = anim(anim_door_closing);
+	}
 }
 
 
@@ -55,6 +60,7 @@ static void update(entity_t *self) {
 		self->anim = anim(anim_door_closed);
 	}
 
+
 	if (self->door.is_open) {
 		self->physics = ENTITY_PHYSICS_NONE;
 		self->size = vec2(0, 0);
@@ -66,9 +72,17 @@ static void update(entity_t *self) {
 
 /// React on ACTIVATE and DEACTIVATE messages
 static void message(entity_t *self, entity_message_t message, void *data) {
+	int oc = self->door.open_count;
 	if (message == EM_ACTIVATE) {
-		self->anim = anim(anim_door_opening);
+		self->door.open_count += 1;
 	} else if (message == EM_DEACTIVATE) {
+		self->door.open_count -= 1;
+	}
+	int c = self->door.open_count;
+
+	if (oc == 0 && c == 1) {
+		self->anim = anim(anim_door_opening);
+	} else if (oc > 0 && c == 0) {
 		self->anim = anim(anim_door_closing);
 	}
 }

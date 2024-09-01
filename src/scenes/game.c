@@ -4,15 +4,14 @@ static sound_t *music;
 static entity_ref_t last_checkpoint = entity_ref_none();
 static vec2_t initial_spawn_pos = vec2(0, 0);
 static char level_path[64] = {0};
-static camera_t camera;
+// static camera_t camera;
 
 static void init(void) {
 	engine_load_level(level_path);
 	engine.gravity = 240;
 
-	camera.offset = vec2(0, 0);
-	camera.speed = 5;
-	camera.min_vel = 1;
+	g.camera.speed = 5;
+	g.camera.min_vel = 1;
 
 	last_checkpoint = entity_ref_none();
 
@@ -20,7 +19,7 @@ static void init(void) {
 
 	if (players.len > 0) {
 		g.player = players.entities[0];
-		camera_follow(&camera, g.player, true);
+		camera_follow(&g.camera, g.player, true);
 		entity_t *player_ent = entity_by_ref(g.player);
 		initial_spawn_pos = player_ent->pos;
 	}
@@ -44,7 +43,7 @@ static void update(void) {
 		return;
 	}
 	scene_base_update();
-	camera_update(&camera);
+	camera_update(&g.camera);
 }
 
 static void draw(void) {
@@ -103,7 +102,7 @@ void game_respawn(void) {
 
 	entity_t *player = entity_spawn(ENTITY_TYPE_PLAYER, pos);
 	g.player = entity_ref(player);
-	camera_follow(&camera, g.player, false);
+	camera_follow(&g.camera, g.player, false);
 }
 
 void game_set_level_path(char *path) {

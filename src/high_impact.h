@@ -28,7 +28,7 @@
 #define WINDOW_WIDTH (RENDER_WIDTH * 4)
 #define WINDOW_HEIGHT (RENDER_HEIGHT * 4)
 
-#define ENTITIES_MAX 1024
+#define ENTITIES_MAX 2048
 #define ENTITY_MAX_SIZE 64
 #define ENTITY_MIN_BOUNCE_VELOCITY 10
 
@@ -92,11 +92,17 @@
 	TYPE(ENTITY_TYPE_TRIGGER, trigger)               \
 	TYPE(ENTITY_TYPE_LEVER, lever)                   \
 	TYPE(ENTITY_TYPE_BUTTON, button)                 \
+	TYPE(ENTITY_TYPE_PRESSURE_PLATE, pressure_plate) \
 	TYPE(ENTITY_TYPE_DOOR, door)                     \
+	TYPE(ENTITY_TYPE_FLOWER, flower)                 \
+	TYPE(ENTITY_TYPE_LAMP, lamp)                     \
+	TYPE(ENTITY_TYPE_SPRINKLER, sprinkler)           \
+	TYPE(ENTITY_TYPE_TEXT, text)                     \
 	TYPE(ENTITY_TYPE_GRAVITY_SWITCH, gravity_switch) \
 	TYPE(ENTITY_TYPE_BAD_BOT, bad_bot)               \
 	TYPE(ENTITY_TYPE_PARTICLE, particle)             \
 	TYPE(ENTITY_TYPE_LEVEL_CHANGE, level_change)     \
+	TYPE(ENTITY_TYPE_CAMERA_SETTING, camera_setting) \
 	TYPE(ENTITY_TYPE_VOID, void)
 
 // All entity types share the same struct. Calling ENTITY_DEFINE() defines that
@@ -114,6 +120,12 @@ ENTITY_DEFINE(
 	    } level_change;
 
 	    struct {
+		    vec2_t offset;
+		    bool move;
+	    } camera_setting;
+
+
+	    struct {
 		    anim_def_t *anim_hit;
 		    bool has_hit;
 		    bool flip;
@@ -122,6 +134,7 @@ ENTITY_DEFINE(
 	    struct {
 		    anim_def_t *anim_hit;
 		    bool has_hit;
+		    float speed;
 	    } smal_proj;
 
 
@@ -165,7 +178,14 @@ ENTITY_DEFINE(
 	    } button;
 
 	    struct {
+		    entity_list_t targets;
+		    float delay;
+		    float on_time;
+	    } pressure_plate;
+
+	    struct {
 		    bool is_open;
+		    int open_count;
 	    } door;
 
 	    struct {
@@ -186,12 +206,33 @@ ENTITY_DEFINE(
 		    float cooldown_timer;
 		    int num_received;
 		    int num_needed;
+		    bool is_water;
+		    float decay;
+		    float decay_timer;
 	    } proj_recv;
+
+	    struct {
+	    } flower;
+
+	    struct {
+		    entity_list_t targets;
+	    } lamp;
+
+	    struct {
+		    bool is_on;
+	    } text;
+
+	    struct {
+		    entity_list_t targets;
+	    } sprinkler;
 
 	    struct {
 		    direction_t direction;
 		    bool is_active;
+		    bool is_water;
 		    float timer;
+		    float delay;
+		    float speed;
 	    } proj_emitter;
     };);
 
@@ -203,6 +244,8 @@ typedef enum {
 	EM_ACTIVATE,
 	EM_DEACTIVATE,
 	EM_ROTATE_RIGHT,
+	EM_WATER,
+	EM_LIGHT,
 } entity_message_t;
 
 // Now that we have all the prerequisites, we can include entity.h
