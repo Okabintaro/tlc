@@ -67,6 +67,28 @@ static void init(entity_t *self) {
 	self->group = ENTITY_GROUP_PLAYER;
 }
 
+static void shoot(entity_t *self) {
+	if (self->player.can_interact_time > 0) {
+		return;
+	}
+
+	vec2_t spawn_pos = vec2_add(self->pos, vec2(self->player.flip ? -3 : 5, 6));
+	spawn_pos.y -= 5;
+	entity_t *plasma = entity_spawn(ENTITY_TYPE_PROJECTILE, spawn_pos);
+	if (plasma) {
+		plasma->vel = vec2(self->player.flip ? -200 : 200, 0);
+		plasma->check_against = ENTITY_GROUP_ENEMY | ENTITY_GROUP_BREAKABLE;
+		plasma->anim = anim(anim_plasma_idle);
+		plasma->projectile.flip = self->player.flip;
+		plasma->anim.flip_x = self->player.flip;
+		plasma->projectile.anim_hit = anim_plasma_hit;
+	}
+	// Add some recoil
+	self->vel = vec2_add(self->vel, vec2(self->player.flip ? 10 : -10, 0));
+
+	// TODO: Play sound
+}
+
 static void update(entity_t *self) {
 	// // spawning?
 	// if (self->anim.def == anim_spawn) {
@@ -123,21 +145,7 @@ static void update(entity_t *self) {
 	}
 
 	if (input_pressed(A_SHOOT)) {
-		vec2_t spawn_pos = vec2_add(self->pos, vec2(self->player.flip ? -3 : 5, 6));
-		spawn_pos.y -= 5;
-		entity_t *plasma = entity_spawn(ENTITY_TYPE_PROJECTILE, spawn_pos);
-		if (plasma) {
-			plasma->vel = vec2(self->player.flip ? -200 : 200, 0);
-			plasma->check_against = ENTITY_GROUP_ENEMY | ENTITY_GROUP_BREAKABLE;
-			plasma->anim = anim(anim_plasma_idle);
-			plasma->projectile.flip = self->player.flip;
-			plasma->anim.flip_x = self->player.flip;
-			plasma->projectile.anim_hit = anim_plasma_hit;
-		}
-		// Add some recoil
-		self->vel = vec2_add(self->vel, vec2(self->player.flip ? 50 : -50, 0));
-
-		// sound_play(sound_plasma);
+		shoot(self);
 	}
 
 	bool was_on_ground = self->on_ground;
@@ -191,7 +199,7 @@ static void update(entity_t *self) {
 
 	self->anim.flip_x = self->player.flip;
 	self->anim.flip_y = upside_down;
-	// self->anim.tile_offset = self->player.flip ? 24 : 0;
+	self->player.can_interact_time -= engine.tick;
 }
 
 static void damage(entity_t *self, entity_t *other, float damage) {

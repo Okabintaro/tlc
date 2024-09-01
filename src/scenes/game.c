@@ -31,23 +31,39 @@ static void cleanup(void) {
 }
 
 static void update(void) {
-	scene_base_update();
+	if (input_pressed(A_DBG_BB)) {
+		g.draw_bb = !g.draw_bb;
+	}
 
+	if (input_pressed(A_PAUSE)) {
+		g.paused = !g.paused;
+	}
+
+
+	if (g.paused) {
+		return;
+	}
+	scene_base_update();
 	camera_update(&camera);
 }
 
 static void draw(void) {
 	scene_base_draw();
 
+	if (g.paused) {
+		font_draw(g.font, vec2(RENDER_WIDTH / 2, RENDER_HEIGHT - 16), "Game Paused. Press START/ESC to resume.",
+		          FONT_ALIGN_CENTER);
+	}
+
 	// Draw some debug info...
-
-	font_draw(g.font, vec2(2, 2),
-	          str_format("total: %.2fms, update: %.2fms, draw: %.2fms\n"
-	                     "draw calls: %d, entities: %d, checks: %d",
-	                     engine.perf.total * 1000, engine.perf.update * 1000, engine.perf.draw * 1000,
-	                     engine.perf.draw_calls, engine.perf.entities, engine.perf.checks),
-	          FONT_ALIGN_LEFT);
-
+	if (g.draw_bb) {
+		font_draw(g.font, vec2(2, 2),
+		          str_format("total: %.2fms, update: %.2fms, draw: %.2fms\n"
+		                     "draw calls: %d, entities: %d, checks: %d",
+		                     engine.perf.total * 1000, engine.perf.update * 1000, engine.perf.draw * 1000,
+		                     engine.perf.draw_calls, engine.perf.entities, engine.perf.checks),
+		          FONT_ALIGN_LEFT);
+	}
 	// font_draw(g.font, vec2(2, 2), str_format("camera: %f %f\n", camera.pos.x, camera.pos.y), FONT_ALIGN_LEFT);
 	// entity_t *player_ent = entity_by_ref(g.player);
 	// font_draw(g.font, vec2(2, 2 + 16), str_format("player: %f %f\n", player_ent->pos.x, player_ent->pos.y),

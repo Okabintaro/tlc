@@ -66,12 +66,9 @@ static void update(entity_t *self) {
 
 /// React on ACTIVATE and DEACTIVATE messages
 static void message(entity_t *self, entity_message_t message, void *data) {
-	printf("door message\n");
 	if (message == EM_ACTIVATE) {
-		printf("door message activate\n");
 		self->anim = anim(anim_door_opening);
 	} else if (message == EM_DEACTIVATE) {
-		printf("door message deactivate\n");
 		self->anim = anim(anim_door_closing);
 	}
 }

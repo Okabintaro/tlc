@@ -1,6 +1,6 @@
 #include "../main.h"
 
-EDITOR_SIZE(16, 16);
+EDITOR_SIZE(48, 48);
 EDITOR_RESIZE(false);
 EDITOR_COLOR(255, 229, 123);
 
@@ -31,15 +31,21 @@ static void init(entity_t *self) {
 	self->lever.is_on = false;
 	self->check_against = ENTITY_GROUP_PLAYER;
 	self->size = vec2(48, 48);
-	self->offset = vec2(-16, 0);
+	self->offset = vec2(-16, -16);
 	draw(self);
 }
 
+static void notify_targets(entity_t *self, entity_t *other);
 
 static void settings(entity_t *self, json_t *settings) {
 	self->lever.targets = entities_from_json_names(json_value_for_key(settings, "target"));
 	json_t *is_on = json_value_for_key(settings, "is_on");
 	self->lever.is_on = is_on ? json_bool(is_on) : false;
+
+	if (self->lever.is_on) {
+		notify_targets(self, NULL);
+	}
+
 	json_t *delay = json_value_for_key(settings, "delay");
 	self->lever.delay = delay ? json_number(delay) : -1;
 	self->lever.can_fire = true;
@@ -54,14 +60,7 @@ static void update(entity_t *self) {
 }
 
 
-static void touch(entity_t *self, entity_t *other) {
-	if (input_released(A_SHOOT)) {
-		self->lever.is_on = !self->lever.is_on;
-		draw(self);
-	} else {
-		return;
-	};
-
+static void notify_targets(entity_t *self, entity_t *other) {
 	for (int i = 0; i < self->lever.targets.len; i++) {
 		entity_t *target = entity_by_ref(self->lever.targets.entities[i]);
 		if (target) {
@@ -69,6 +68,20 @@ static void touch(entity_t *self, entity_t *other) {
 			entity_message(target, self->lever.is_on ? EM_ACTIVATE : EM_DEACTIVATE, NULL);
 		}
 	}
+}
+
+static void touch(entity_t *self, entity_t *other) {
+	entity_t *player = entity_by_ref(g.player);
+	player->player.can_interact_time = 0.1;
+
+	if (!input_released(A_SHOOT)) {
+		return;
+	}
+
+	self->lever.is_on = !self->lever.is_on;
+	draw(self);
+
+	notify_targets(self, other);
 
 	if (self->lever.delay == -1) {
 		self->lever.can_fire = false;

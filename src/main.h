@@ -6,16 +6,14 @@
 
 // -----------------------------------------------------------------------------
 // Button actions
-
-// clang-format off
 typedef enum {
 	A_LEFT,
 	A_RIGHT,
 	A_JUMP,
-	A_SHOOT
+	A_SHOOT,
+	A_PAUSE,
+	A_DBG_BB,
 } action_t;
-// clang-format on
-
 
 // -----------------------------------------------------------------------------
 // Global data
@@ -27,6 +25,8 @@ typedef struct {
 	entity_ref_t player;
 
 	float level_time;
+	bool draw_bb;
+	bool paused;
 } global_t;
 
 extern global_t g;
@@ -46,5 +46,6 @@ void game_respawn(void);
 
 entity_t *game_spawn_particle(vec2_t pos, float vel, float vel_variance, float angle, float angle_variance,
                               anim_def_t *sheet);
+
 
 #endif

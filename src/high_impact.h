@@ -11,6 +11,7 @@
 // particular game. Increase them as needed. Allocating a few GB and thousands
 // of entities is totally fine.
 
+
 #define ALLOC_SIZE (16 * 1024 * 1024)
 #define ALLOC_TEMP_OBJECTS_MAX 8
 
@@ -62,6 +63,8 @@
 #include "../high_impact/src/trace.h"
 #include "../high_impact/src/types.h"
 #include "../high_impact/src/utils.h"
+#include "utils.h"
+
 
 // Careful, before we can include "../high_impact/src/entity.h", we need to set
 // up our entity types.
@@ -82,8 +85,13 @@
 #define ENTITY_TYPES(TYPE)                           \
 	TYPE(ENTITY_TYPE_PLAYER, player)                 \
 	TYPE(ENTITY_TYPE_PROJECTILE, projectile)         \
+	TYPE(ENTITY_TYPE_SMAL_PROJ, smal_proj)           \
+	TYPE(ENTITY_TYPE_PROJ_EMITTER, proj_emitter)     \
+	TYPE(ENTITY_TYPE_PROJ_RECV, proj_recv)           \
+	TYPE(ENTITY_TYPE_PROJ_PRISM, proj_prism)         \
 	TYPE(ENTITY_TYPE_TRIGGER, trigger)               \
 	TYPE(ENTITY_TYPE_LEVER, lever)                   \
+	TYPE(ENTITY_TYPE_BUTTON, button)                 \
 	TYPE(ENTITY_TYPE_DOOR, door)                     \
 	TYPE(ENTITY_TYPE_GRAVITY_SWITCH, gravity_switch) \
 	TYPE(ENTITY_TYPE_BAD_BOT, bad_bot)               \
@@ -112,12 +120,19 @@ ENTITY_DEFINE(
 	    } projectile;
 
 	    struct {
+		    anim_def_t *anim_hit;
+		    bool has_hit;
+	    } smal_proj;
+
+
+	    struct {
 		    float high_jump_time;
 		    float idle_time;
 		    bool flip;
 		    bool flip_y;
 		    bool can_jump;
 		    bool is_idle;
+		    float can_interact_time;
 	    } player;
 
 	    struct {
@@ -142,6 +157,14 @@ ENTITY_DEFINE(
 	    } lever;
 
 	    struct {
+		    entity_list_t targets;
+		    float delay;
+		    float delay_time;
+		    bool can_fire;
+		    /*bool is_on;*/
+	    } button;
+
+	    struct {
 		    bool is_open;
 	    } door;
 
@@ -150,6 +173,26 @@ ENTITY_DEFINE(
 		    bool seen_player;
 		    float jump_timer;
 	    } bad_bot;
+
+	    struct {
+		    direction_t direction;
+		    bool is_active;
+		    float cooldown_timer;
+	    } proj_prism;
+
+	    struct {
+		    entity_list_t targets;
+		    bool is_active;
+		    float cooldown_timer;
+		    int num_received;
+		    int num_needed;
+	    } proj_recv;
+
+	    struct {
+		    direction_t direction;
+		    bool is_active;
+		    float timer;
+	    } proj_emitter;
     };);
 
 // The entity_message_t is used with the entity_message() function. You can
@@ -159,6 +202,7 @@ typedef enum {
 	EM_INVALID,
 	EM_ACTIVATE,
 	EM_DEACTIVATE,
+	EM_ROTATE_RIGHT,
 } entity_message_t;
 
 // Now that we have all the prerequisites, we can include entity.h

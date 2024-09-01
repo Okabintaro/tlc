@@ -51,20 +51,92 @@
 		},
 		{
 			"type": "proj_emitter",
-			"x": 196,
-			"y": 176,
+			"x": 168,
+			"y": 124,
 			"settings": {
-				"name": "pe1"
+				"name": "pe1",
+				"direction": "right"
 			}
 		},
 		{
 			"type": "lever",
-			"x": 196,
-			"y": 192,
+			"x": 204,
+			"y": 176,
+			"settings": {
+				"target": {
+					"1": "pe1"
+				},
+				"is_on": "true"
+			}
+		},
+		{
+			"type": "button",
+			"x": 256,
+			"y": 176,
+			"settings": {
+				"target": {
+					"1": "prism_right"
+				}
+			}
+		},
+		{
+			"type": "proj_prism",
+			"x": 168,
+			"y": 100,
+			"settings": {
+				"name": "prism_up"
+			}
+		},
+		{
+			"type": "button",
+			"x": 152,
+			"y": 176,
 			"settings": {
 				"target": {
 					"1": "pe1"
 				}
+			}
+		},
+		{
+			"type": "proj_prism",
+			"x": 168,
+			"y": 148,
+			"settings": {
+				"name": "prism_down"
+			}
+		},
+		{
+			"type": "proj_prism",
+			"x": 140,
+			"y": 124,
+			"settings": {
+				"name": "prism_left"
+			}
+		},
+		{
+			"type": "proj_prism",
+			"x": 204,
+			"y": 124,
+			"settings": {
+				"name": "prism_right"
+			}
+		},
+		{
+			"type": "proj_recv",
+			"x": 204,
+			"y": 192,
+			"settings": {
+				"target": {
+					"1": "td"
+				}
+			}
+		},
+		{
+			"type": "door",
+			"x": 348,
+			"y": 176,
+			"settings": {
+				"name": "td"
 			}
 		}
 	],
