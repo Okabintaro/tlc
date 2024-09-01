@@ -8,6 +8,7 @@ static anim_def_t *anim_off;
 static anim_def_t *anim_on;
 static bool has_light = false;
 static bool has_water = false;
+static bool is_growing = false;
 
 static void load(void) {
 	image_t *sheet = image("assets/sprites/flower.qoi");
@@ -30,7 +31,9 @@ static void message(entity_t *self, entity_message_t message, void *data) {
 		has_light = (bool)data;
 	}
 
-	if (has_water && has_light) {
+	printf("has_water: %d, has_light: %d\n", has_water, has_light);
+	if (has_water && has_light && !is_growing) {
+		is_growing = true;
 		self->anim = anim(anim_on);
 	}
 }

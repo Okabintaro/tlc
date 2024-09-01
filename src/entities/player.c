@@ -26,6 +26,7 @@ static anim_def_t *anim_shoot;
 
 static anim_def_t *anim_plasma_idle;
 static anim_def_t *anim_plasma_hit;
+static sound_source_t *sound_jump;
 
 
 static void load(void) {
@@ -54,6 +55,7 @@ static void load(void) {
 	anim_plasma_idle      = anim_def(plasma_sheet, vec2i(32, 16), 1.0, {0});
 	anim_plasma_hit       = anim_def(plasma_sheet, vec2i(32, 16), 0.07, {0, 1, 2, 3, ANIM_STOP});
 
+	sound_jump = sound_source("assets/sfx/jump.qoa");
 	// sound_plasma = sound_source("assets/sounds/plasma.qoa");
 	// sound_die    = sound_source("assets/sounds/die-respawn.qoa");
 	// clang-format on
@@ -130,6 +132,7 @@ static void update(entity_t *self) {
 			self->vel.y = upside_down ? JUMP_INITIAL_VEL : -JUMP_INITIAL_VEL;
 			self->player.can_jump = false;
 			self->player.high_jump_time = JUMP_HIGH_TIME;
+			sound_play_ex(sound_jump, 0.3, 0.0, 0.8);
 		} else if (self->player.high_jump_time > 0) {
 			self->player.high_jump_time -= engine.tick;
 			float d = self->player.high_jump_time;

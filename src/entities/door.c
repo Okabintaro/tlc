@@ -8,9 +8,14 @@ static anim_def_t *anim_door_opened;
 static anim_def_t *anim_door_closed;
 static anim_def_t *anim_door_opening;
 static anim_def_t *anim_door_closing;
+static sound_source_t *sound_door;
+static sound_t snd_door;
 
 static void load(void) {
 	image_t *door = image("assets/sprites/door.qoi");
+	// door_open = sound("assets/sfx/door_open.wav");
+	// sound_door = sound();
+	sound_door = sound_source("assets/sfx/door.qoa");
 
 	// There are 4 frames in the door sprite sheet, closed, opening, opening, open
 	anim_door_opened = anim_def(door, vec2i(16, 32), 1.0, {3});
@@ -82,8 +87,10 @@ static void message(entity_t *self, entity_message_t message, void *data) {
 
 	if (oc == 0 && c == 1) {
 		self->anim = anim(anim_door_opening);
+		sound_play_ex(sound_door, 0.3f, 0.0, 1.0);
 	} else if (oc > 0 && c == 0) {
 		self->anim = anim(anim_door_closing);
+		sound_play_ex(sound_door, 0.3f, 0.0, 0.6);
 	}
 }
 

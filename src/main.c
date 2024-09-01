@@ -31,8 +31,9 @@ void main_init(void) {
 	g.player = entity_ref_none();
 	g.font = font("assets/font_04b03.qoi", "assets/font_04b03.json");
 
-	g.music = sound(sound_source("assets/music/pixel12.qoa"));
+	g.music = sound(sound_source("assets/music/pixel7.qoa"));
 	sound_set_loop(g.music, true);
+	sound_set_volume(g.music, 0.2);
 
 	sound_set_global_volume(0.75);
 

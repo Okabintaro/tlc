@@ -7,11 +7,14 @@ EDITOR_COLOR(64, 255, 255);
 static anim_def_t *anim_button_off;
 static anim_def_t *anim_button_on;
 
+static sound_source_t *snd_hit;
+
 static void load(void) {
 	image_t *sheet = image("assets/sprites/button.qoi");
 
 	anim_button_off = anim_def(sheet, vec2i(16, 16), 1.0, {0});
 	anim_button_on = anim_def(sheet, vec2i(16, 16), 1.0, {1});
+	snd_hit = sound_source("assets/sfx/hit.qoa");
 }
 
 
@@ -55,6 +58,7 @@ static void touch(entity_t *self, entity_t *other) {
 			entity_message(target, EM_ROTATE_RIGHT, NULL);
 		}
 	}
+	sound_play_ex(snd_hit, 0.3f, 0.0f, 1.0f);
 
 	if (self->button.delay == -1) {
 		self->button.can_fire = false;

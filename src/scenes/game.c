@@ -23,6 +23,10 @@ static void init(void) {
 		entity_t *player_ent = entity_by_ref(g.player);
 		initial_spawn_pos = player_ent->pos;
 	}
+
+	sound_set_time(g.music, 0);
+	sound_set_volume(g.music, 0.4);
+	sound_unpause(g.music);
 }
 
 static void cleanup(void) {
@@ -37,7 +41,6 @@ static void update(void) {
 	if (input_pressed(A_PAUSE)) {
 		g.paused = !g.paused;
 	}
-
 
 	if (g.paused) {
 		return;

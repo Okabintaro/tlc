@@ -22,7 +22,7 @@ static void settings(entity_t *self, json_t *settings) {
 
 static void trigger(entity_t *self, entity_t *other) {
 	g.camera.offset = self->camera_setting.offset;
-	printf("Trigger camera offset: %f, %f\n", g.camera.offset.x, g.camera.offset.y);
+	// printf("Trigger camera offset: %f, %f\n", g.camera.offset.x, g.camera.offset.y);
 }
 
 entity_vtab_t entity_vtab_camera_setting = {

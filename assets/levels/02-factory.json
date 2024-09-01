@@ -70,13 +70,13 @@
 			"y": 336,
 			"settings": {
 				"size": {
-					"x": 32,
+					"x": 64,
 					"y": 64
 				},
 				"target": {
 					"1": "cs_center"
 				},
-				"delay": 1
+				"delay": 0.5
 			}
 		},
 		{
@@ -257,8 +257,8 @@
 		},
 		{
 			"type": "player",
-			"x": 328,
-			"y": 450
+			"x": 792,
+			"y": 690
 		},
 		{
 			"type": "lever",
@@ -396,17 +396,6 @@
 			}
 		},
 		{
-			"type": "proj_emitter",
-			"x": 1472,
-			"y": 880,
-			"settings": {
-				"direction": "down",
-				"name": "r2_pe_temp",
-				"delay": 0.3,
-				"is_on": "false"
-			}
-		},
-		{
 			"type": "proj_prism",
 			"x": 1392,
 			"y": 560,
@@ -497,15 +486,15 @@
 		},
 		{
 			"type": "trigger",
-			"x": 1152,
-			"y": 336,
+			"x": 624,
+			"y": 416,
 			"settings": {
 				"size": {
-					"x": 192,
+					"x": 512,
 					"y": 64
 				},
 				"target": {
-					"1": "cs_room"
+					"1": "cs_room_down2"
 				},
 				"delay": 1
 			}
@@ -538,17 +527,6 @@
 					"1": "cs_center"
 				},
 				"delay": 1
-			}
-		},
-		{
-			"type": "proj_emitter",
-			"x": 1184,
-			"y": 880,
-			"settings": {
-				"direction": "left",
-				"name": "r2_pe_temp_clone",
-				"delay": 0.3,
-				"is_on": "false"
 			}
 		},
 		{
@@ -707,7 +685,7 @@
 			"y": 560,
 			"settings": {
 				"name": "r3_p3",
-				"direction": "right"
+				"direction": "left"
 			}
 		},
 		{
@@ -923,18 +901,6 @@
 			}
 		},
 		{
-			"type": "proj_emitter",
-			"x": 1184,
-			"y": 912,
-			"settings": {
-				"direction": "right",
-				"name": "r2_pe_temp_clone_clone",
-				"delay": 0.2,
-				"is_on": "false",
-				"is_water": "true"
-			}
-		},
-		{
 			"type": "text",
 			"x": 864,
 			"y": 624
@@ -952,6 +918,60 @@
 					"1": "cs_center"
 				},
 				"delay": 1
+			}
+		},
+		{
+			"type": "trigger",
+			"x": 1152,
+			"y": 336,
+			"settings": {
+				"size": {
+					"x": 192,
+					"y": 64
+				},
+				"target": {
+					"1": "cs_room"
+				},
+				"delay": 0.5
+			}
+		},
+		{
+			"type": "trigger",
+			"x": 1136,
+			"y": 416,
+			"settings": {
+				"size": {
+					"x": 32,
+					"y": 64
+				},
+				"target": {
+					"1": "cs_center"
+				},
+				"delay": 1
+			}
+		},
+		{
+			"type": "trigger",
+			"x": 592,
+			"y": 416,
+			"settings": {
+				"size": {
+					"x": 32,
+					"y": 64
+				},
+				"target": {
+					"1": "cs_center"
+				},
+				"delay": 1
+			}
+		},
+		{
+			"type": "camera_setting",
+			"x": 592,
+			"y": 336,
+			"settings": {
+				"name": "cs_room_down2",
+				"offset_y": 64
 			}
 		}
 	],

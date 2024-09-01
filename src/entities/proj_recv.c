@@ -9,11 +9,17 @@ EDITOR_COLOR(64, 255, 0);
 static anim_def_t *anim_recv;
 static anim_def_t *anim_recv_water;
 
+static sound_source_t *snd_beep;
+static sound_source_t *snd_beep_sine;
+
 static void load(void) {
 	image_t *sheet = image("assets/sprites/recv.qoi");
 	anim_recv = anim_def(sheet, vec2i(16, 16), 1.0, {0, 1, 2, 3, 4, 5, 6, 7});
 	image_t *sheet_water = image("assets/sprites/recv_water.qoi");
 	anim_recv_water = anim_def(sheet_water, vec2i(16, 16), 1.0, {0, 1, 2, 3, 4, 5, 6, 7});
+
+	snd_beep = sound_source("assets/sfx/beep_st.qoa");
+	snd_beep_sine = sound_source("assets/sfx/beep_sine.qoa");
 }
 
 static void init(entity_t *self) {
@@ -95,9 +101,17 @@ static void damage(entity_t *self, entity_t *other, float damage) {}
 
 static void touch(entity_t *self, entity_t *other) {
 	entity_kill(other);
-	self->proj_recv.num_received++;
-	if (self->proj_recv.num_received == 7) {
-		// TODO: Only once?
+
+	int last = self->proj_recv.num_received;
+	self->proj_recv.num_received = clamp(self->proj_recv.num_received + 1, 0, 7);
+	int nr = self->proj_recv.num_received;
+
+	printf("last: %d -> n: %d\n", last, nr);
+	if (nr > last) {
+		float pitch = 1.0f + (float)nr / 8.0f;
+		sound_play_ex(self->proj_recv.is_water ? snd_beep_sine : snd_beep, 0.4f, 0.0f, pitch);
+	}
+	if (last == 6 && nr == 7) {
 		notify_targets(self, other, true);
 	}
 }
