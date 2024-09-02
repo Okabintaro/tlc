@@ -106,7 +106,6 @@ static void touch(entity_t *self, entity_t *other) {
 	self->proj_recv.num_received = clamp(self->proj_recv.num_received + 1, 0, 7);
 	int nr = self->proj_recv.num_received;
 
-	printf("last: %d -> n: %d\n", last, nr);
 	if (nr > last) {
 		float pitch = 1.0f + (float)nr / 8.0f;
 		sound_play_ex(self->proj_recv.is_water ? snd_beep_sine : snd_beep, 0.4f, 0.0f, pitch);

@@ -237,7 +237,7 @@ COMMON_DEPS_WASM = $(patsubst %.c, $(OBJ_DIR)/wasm/%.d, $(GAME_SRC))
 wasm: assets wasm_build
 wasm_build: $(COMMON_OBJ_WASM)
 	mkdir -p $(BUILD_DIR_WASM)
-	cp src/wasm_index.html $(BUILD_DIR_WASM)/game.html
+	cp src/wasm_index.html $(BUILD_DIR_WASM)/index.html
 	$(EMCC) $^ -o $(TARGET_WASM) -lGL \
 		-s ALLOW_MEMORY_GROWTH=1 \
 		-s ENVIRONMENT=web \

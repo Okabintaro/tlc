@@ -15,10 +15,10 @@
 #define ALLOC_SIZE (16 * 1024 * 1024)
 #define ALLOC_TEMP_OBJECTS_MAX 8
 
-#define WINDOW_TITLE "Chromatic Restoration Protocol"
+#define WINDOW_TITLE "The Last Chlorophyll"
 
 #define GAME_VENDOR "oka"
-#define GAME_NAME "chromatic_restoration_protocol"
+#define GAME_NAME "the_last_chlorophyll"
 
 #define RENDER_WIDTH 320
 #define RENDER_HEIGHT 180
