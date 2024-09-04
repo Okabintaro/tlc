@@ -84,7 +84,6 @@
 
 #define ENTITY_TYPES(TYPE)                           \
 	TYPE(ENTITY_TYPE_PLAYER, player)                 \
-	TYPE(ENTITY_TYPE_PROJECTILE, projectile)         \
 	TYPE(ENTITY_TYPE_SMAL_PROJ, smal_proj)           \
 	TYPE(ENTITY_TYPE_PROJ_EMITTER, proj_emitter)     \
 	TYPE(ENTITY_TYPE_PROJ_RECV, proj_recv)           \
@@ -98,8 +97,6 @@
 	TYPE(ENTITY_TYPE_LAMP, lamp)                     \
 	TYPE(ENTITY_TYPE_SPRINKLER, sprinkler)           \
 	TYPE(ENTITY_TYPE_TEXT, text)                     \
-	TYPE(ENTITY_TYPE_GRAVITY_SWITCH, gravity_switch) \
-	TYPE(ENTITY_TYPE_BAD_BOT, bad_bot)               \
 	TYPE(ENTITY_TYPE_PARTICLE, particle)             \
 	TYPE(ENTITY_TYPE_LEVEL_CHANGE, level_change)     \
 	TYPE(ENTITY_TYPE_CAMERA_SETTING, camera_setting) \
@@ -113,9 +110,6 @@ ENTITY_DEFINE(
     // Entity private data
     union {
 	    struct {
-	    } gravity_switch;
-
-	    struct {
 		    char *path;
 	    } level_change;
 
@@ -124,19 +118,10 @@ ENTITY_DEFINE(
 		    bool move;
 	    } camera_setting;
 
-
 	    struct {
-		    anim_def_t *anim_hit;
-		    bool has_hit;
-		    bool flip;
-	    } projectile;
-
-	    struct {
-		    anim_def_t *anim_hit;
 		    bool is_water;
 		    float speed;
 	    } smal_proj;
-
 
 	    struct {
 		    float high_jump_time;
@@ -145,7 +130,6 @@ ENTITY_DEFINE(
 		    bool flip_y;
 		    bool can_jump;
 		    bool is_idle;
-		    float can_interact_time;
 	    } player;
 
 	    struct {
@@ -171,10 +155,7 @@ ENTITY_DEFINE(
 
 	    struct {
 		    entity_list_t targets;
-		    float delay;
-		    float delay_time;
-		    bool can_fire;
-		    /*bool is_on;*/
+		    float on_time;
 	    } button;
 
 	    struct {
@@ -189,10 +170,13 @@ ENTITY_DEFINE(
 	    } door;
 
 	    struct {
-		    bool in_jump;
-		    bool seen_player;
-		    float jump_timer;
-	    } bad_bot;
+		    direction_t direction;
+		    bool is_active;
+		    bool is_water;
+		    float timer;
+		    float delay;
+		    float speed;
+	    } proj_emitter;
 
 	    struct {
 		    direction_t direction;
@@ -212,28 +196,17 @@ ENTITY_DEFINE(
 	    } proj_recv;
 
 	    struct {
-	    } flower;
-
-	    struct {
 		    entity_list_t targets;
 	    } lamp;
+	    struct {
+		    entity_list_t targets;
+	    } sprinkler;
+	    struct {
+	    } flower;
 
 	    struct {
 		    bool is_on;
 	    } text;
-
-	    struct {
-		    entity_list_t targets;
-	    } sprinkler;
-
-	    struct {
-		    direction_t direction;
-		    bool is_active;
-		    bool is_water;
-		    float timer;
-		    float delay;
-		    float speed;
-	    } proj_emitter;
     };);
 
 // The entity_message_t is used with the entity_message() function. You can

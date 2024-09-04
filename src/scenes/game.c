@@ -38,6 +38,15 @@ static void update(void) {
 		g.draw_bb = !g.draw_bb;
 	}
 
+	if (input_pressed(A_LOAD)) {
+		entities_load("savegame.bin");
+	}
+
+	if (input_pressed(A_SAVE)) {
+		entities_save("savegame.bin");
+	}
+
+
 	if (input_pressed(A_PAUSE)) {
 		g.paused = !g.paused;
 	}

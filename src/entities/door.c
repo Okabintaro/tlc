@@ -9,12 +9,9 @@ static anim_def_t *anim_door_closed;
 static anim_def_t *anim_door_opening;
 static anim_def_t *anim_door_closing;
 static sound_source_t *sound_door;
-static sound_t snd_door;
 
 static void load(void) {
 	image_t *door = image("assets/sprites/door.qoi");
-	// door_open = sound("assets/sfx/door_open.wav");
-	// sound_door = sound();
 	sound_door = sound_source("assets/sfx/door.qoa");
 
 	// There are 4 frames in the door sprite sheet, closed, opening, opening, open

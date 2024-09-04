@@ -72,7 +72,6 @@ static void notify_targets(entity_t *self, entity_t *other) {
 
 static void touch(entity_t *self, entity_t *other) {
 	entity_t *player = entity_by_ref(g.player);
-	player->player.can_interact_time = 0.1;
 
 	if (!input_released(A_SHOOT)) {
 		return;

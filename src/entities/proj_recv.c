@@ -42,7 +42,6 @@ static void settings(entity_t *self, json_t *settings) {
 	if (is_water) {
 		self->anim = anim(anim_recv_water);
 	}
-
 	// TODO: Load num_needed, ...
 }
 
