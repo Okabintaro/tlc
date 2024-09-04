@@ -22,7 +22,7 @@
 
 #define RENDER_WIDTH 320
 #define RENDER_HEIGHT 180
-#define RENDER_RESIZE_MODE RENDER_RESIZE_WIDTH
+#define RENDER_RESIZE_MODE RENDER_RESIZE_ANY
 #define RENDER_SCALE_MODE RENDER_SCALE_DISCRETE
 
 #define WINDOW_WIDTH (RENDER_WIDTH * 4)
@@ -63,6 +63,7 @@
 #include "../high_impact/src/trace.h"
 #include "../high_impact/src/types.h"
 #include "../high_impact/src/utils.h"
+
 #include "utils.h"
 
 
