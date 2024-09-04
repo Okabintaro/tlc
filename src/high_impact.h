@@ -133,7 +133,7 @@ ENTITY_DEFINE(
 
 	    struct {
 		    anim_def_t *anim_hit;
-		    bool has_hit;
+		    bool is_water;
 		    float speed;
 	    } smal_proj;
 

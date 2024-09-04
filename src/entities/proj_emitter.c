@@ -7,21 +7,12 @@ EDITOR_COLOR(255, 128, 0);
 static anim_def_t *anim_proj_emitter_idle;
 static anim_def_t *anim_proj_emitter_active;
 
-static anim_def_t *anim_proj_energy;
-static anim_def_t *anim_proj_water;
-
 static void load(void) {
 	image_t *sheet = image("assets/sprites/proj_emitter.qoi");
 	anim_proj_emitter_idle = anim_def(sheet, vec2i(16, 16), 1.0, {0});
 	anim_proj_emitter_active = anim_def(sheet, vec2i(16, 16), 1.0, {3});
 	anim_proj_emitter_idle->pivot = vec2(8, 8);
 	anim_proj_emitter_active->pivot = vec2(8, 8);
-
-	image_t *energy_sheet = image("assets/sprites/smal_proj.qoi");
-	anim_proj_energy = anim_def(energy_sheet, vec2i(8, 8), 0.07, {0, 1, 2, 3});
-
-	image_t *water_sheet = image("assets/sprites/smal_proj_water.qoi");
-	anim_proj_water = anim_def(water_sheet, vec2i(8, 8), 0.07, {0, 1, 2, 3});
 }
 
 static void draw(entity_t *self) {
@@ -121,9 +112,8 @@ static void emit_projectile(entity_t *self) {
 	if (proj) {
 		proj->vel = velocity;
 		proj->check_against = ENTITY_GROUP_ENEMY | ENTITY_GROUP_BREAKABLE;
-		proj->anim = self->proj_emitter.is_water ? anim(anim_proj_water) : anim(anim_proj_energy);
-		proj->anim.flip_x = proj->projectile.flip;
 		proj->smal_proj.speed = speed;
+		proj->smal_proj.is_water = self->proj_emitter.is_water;
 	}
 	self->proj_emitter.timer = self->proj_emitter.delay;
 }
