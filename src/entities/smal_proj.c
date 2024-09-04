@@ -42,11 +42,15 @@ static void draw(entity_t *self, vec2_t viewport) {
 	}
 }
 
+static void touch(entity_t *self, entity_t *other) {
+	entity_kill(self);
+}
 
 entity_vtab_t entity_vtab_smal_proj = {
     .load = load,
     .init = init,
     .update = update,
     .collide = collide,
+    .touch = touch,
     .draw = draw,
 };
