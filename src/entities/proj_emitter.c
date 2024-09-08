@@ -167,6 +167,52 @@ static void drawa(entity_t *self, vec2_t viewport) {
 	            rgba(255, 255, 255, 10));
 }
 
+#define SERIALIZE_FIELD(field, type) \
+do { \
+  memcpy(buffer, field, sizeof(type)); \
+  buffer += sizeof(type); \
+  remaining_bytes -= sizeof(type); \
+  bytes_written += sizeof(type); \
+} while (0)
+
+static int serialize(entity_t *self, uint8_t* buffer, uint32_t remaining_bytes) {
+  int bytes_written = entity_base_serialize(self, buffer, remaining_bytes);
+  buffer += bytes_written;
+  SERIALIZE_FIELD(&self->proj_emitter.is_active, bool);
+  SERIALIZE_FIELD(&self->proj_emitter.delay, float);
+  SERIALIZE_FIELD(&self->proj_emitter.speed, float);
+  return bytes_written;
+}
+
+
+#define DESERIALIZE_FIELD(field, type) \
+do { \
+  memcpy(field, buffer, sizeof(type)); \
+  buffer += sizeof(type); \
+  bytes_read += sizeof(type); \
+} while (0)
+
+static int deserialize(entity_t *self, uint8_t* buffer, uint32_t version) {
+  int bytes_read = entity_base_deserialize(self, buffer, version);
+  buffer += bytes_read;
+  DESERIALIZE_FIELD(&self->proj_emitter.is_active, bool);
+  DESERIALIZE_FIELD(&self->proj_emitter.delay, float);
+  DESERIALIZE_FIELD(&self->proj_emitter.speed, float);
+  return bytes_read;
+}
+
+
+// Called when the entity is serialized to a buffer.
+// Return the number of bytes written to the buffer.
+// int (*serialize)(entity_t *self, uint8_t* buffer, uint32_t remaining_bytes);
+
+// Called when the entity is deserialized from a buffer
+// The buffer pointer is advanced by the number of bytes read
+// Returns the number of bytes read from the buffer
+// version is the version of the savegame file that gets loaded.
+// int (*deserialize)(entity_t *self, uint8_t* buffer, uint32_t version);
+
+
 
 entity_vtab_t entity_vtab_proj_emitter = {
     .load = load,
@@ -175,4 +221,6 @@ entity_vtab_t entity_vtab_proj_emitter = {
     .message = message,
     .draw = drawa,
     .update = update,
+    .serialize = serialize,
+    .deserialize = deserialize,
 };

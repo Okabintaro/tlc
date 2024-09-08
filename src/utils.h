@@ -2,7 +2,7 @@
 #define UTILS_H
 
 // -----------------------------------------------------------------------------
-// Addtional custom types
+// Additional custom types
 typedef enum direction_t {
 	DIR_UP,
 	DIR_RIGHT,

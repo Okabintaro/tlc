@@ -65,9 +65,9 @@ QOPCONV = high_impact/tools/qopconv
 
 
 ifeq ($(DEBUG), true)
-	C_FLAGS := $(C_FLAGS) -g
+	C_FLAGS := $(C_FLAGS) -Og -g
 else
-	C_FLAGS := $(C_FLAGS) -O3
+	C_FLAGS := $(C_FLAGS) -Os
 endif
 
 
@@ -164,8 +164,13 @@ ASSETS_ENC_QOI := $(ASSETS_PNG:assets/%.png=$(ASSETS_BUILD_DIR)/%.qoi)
 ASSETS_ENC_QOA := $(ASSETS_WAV:assets/%.wav=$(ASSETS_BUILD_DIR)/%.qoa)
 ASSETS_CP_JSON := $(ASSETS_JSON:assets/%.json=$(ASSETS_BUILD_DIR)/%.json)
 
+ASSETS_TMJ := $(shell find $(ASSETS_SRC_DIR) -type f -name '*.tmj')
+ASSETS_TSJ := $(shell find $(ASSETS_SRC_DIR) -type f -name '*.tsj')
+ASSETS_CP_TMJ := $(ASSETS_TMJ:assets/%.tmj=$(ASSETS_BUILD_DIR)/%.tmj)
+ASSETS_CP_TSJ := $(ASSETS_TSJ:assets/%.tsj=$(ASSETS_BUILD_DIR)/%.tsj)
+
 assets: qoiconv qoaconv assets_build
-assets_build: $(ASSETS_ENC_QOI) $(ASSETS_ENC_QOA) $(ASSETS_CP_JSON)
+assets_build: $(ASSETS_ENC_QOI) $(ASSETS_ENC_QOA) $(ASSETS_CP_JSON) $(ASSETS_CP_TMJ) $(ASSETS_CP_TSJ)
 
 build/assets/%.qoi: assets/%.png
 	@mkdir -p $(@D)
@@ -176,6 +181,14 @@ build/assets/%.qoa: assets/%.wav
 	$(QOACONV) $< $@
 
 build/assets/%.json: assets/%.json
+	@mkdir -p $(@D)
+	cp $< $@
+
+build/assets/%.tmj: assets/%.tmj
+	@mkdir -p $(@D)
+	cp $< $@
+
+build/assets/%.tsj: assets/%.tsj
 	@mkdir -p $(@D)
 	cp $< $@
 

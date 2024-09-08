@@ -1,4 +1,6 @@
 #include "../main.h"
+#include "../inspector.h"
+#include <stdint.h>
 
 EDITOR_SIZE(8, 14);
 EDITOR_RESIZE(false);
@@ -47,8 +49,10 @@ static void init(entity_t *self) {
 	self->group = ENTITY_GROUP_PLAYER;
 }
 
-
 static void update(entity_t *self) {
+	if (inspector_active()) {
+		return;
+	}
 	self->friction.x = self->on_ground ? FRICTION_GROUND : FRICTION_AIR;
 
 	bool did_move = false;

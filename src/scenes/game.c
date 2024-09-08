@@ -1,4 +1,8 @@
 #include "../main.h"
+#include <stdio.h>
+
+#define INSPECTOR_IMPL
+#include "../inspector.h"
 
 static sound_t *music;
 static entity_ref_t last_checkpoint = entity_ref_none();
@@ -7,7 +11,8 @@ static char level_path[64] = {0};
 // static camera_t camera;
 
 static void init(void) {
-	engine_load_level(level_path);
+	// engine_load_level(level_path);
+	engine_load_level_tiled("assets/map/intro.tmj", "assets/map");
 	engine.gravity = 240;
 
 	g.camera.speed = 5;
@@ -16,7 +21,6 @@ static void init(void) {
 	last_checkpoint = entity_ref_none();
 
 	entity_list_t players = entities_by_type(ENTITY_TYPE_PLAYER);
-
 	if (players.len > 0) {
 		g.player = players.entities[0];
 		camera_follow(&g.camera, g.player, true);
@@ -24,33 +28,69 @@ static void init(void) {
 		initial_spawn_pos = player_ent->pos;
 	}
 
-	sound_set_time(g.music, 0);
-	sound_set_volume(g.music, 0.4);
-	sound_unpause(g.music);
+	inspector_init((inspector_setup_t) {
+		.cam = &g.camera,
+		.font = g.font,
+		.player = g.player,
+		.actions = {
+			.toggle = A_DBG_ROAM,
+			.up = A_UP,
+			.right = A_RIGHT,
+			.down = A_DOWN,
+			.left = A_LEFT,
+			.select = A_CLICK,
+			.drag = A_RIGHT_CLICK,
+			.zoom_in = A_ZOOM_IN,
+			.zoom_out = A_ZOOM_OUT,
+		}
+	});
+
+	// sound_set_time(g.music, 0);
+	// sound_set_volume(g.music, 0.4);
+	// sound_unpause(g.music);
 }
 
 static void cleanup(void) {
 	g.level_time = engine.time;
 }
 
+
 static void update(void) {
 	if (input_pressed(A_DBG_BB)) {
 		g.draw_bb = !g.draw_bb;
+	}
+
+	if (input_pressed(A_SAVE)) {
+		entities_save("entities.bin");
+	}
+
+	if (input_pressed(A_LOAD)) {
+		entities_load("entities.bin");
+		entity_list_t players = entities_by_type(ENTITY_TYPE_PLAYER);
+		if (players.len > 0) {
+			g.player = players.entities[0];
+			camera_follow(&g.camera, g.player, true);
+			entity_t *player_ent = entity_by_ref(g.player);
+			initial_spawn_pos = player_ent->pos;
+		}
 	}
 
 	if (input_pressed(A_PAUSE)) {
 		g.paused = !g.paused;
 	}
 
-	if (g.paused) {
-		return;
+	if (!g.paused) {
+		scene_base_update();
 	}
-	scene_base_update();
+	inspector_update();
 	camera_update(&g.camera);
 }
 
+
 static void draw(void) {
 	scene_base_draw();
+
+	inspector_draw();
 
 	if (g.paused) {
 		font_draw(g.font, vec2(RENDER_WIDTH / 2, RENDER_HEIGHT - 16), "Game Paused. Press START/ESC to resume.",
